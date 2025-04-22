@@ -89,6 +89,8 @@ class LlmChatView extends StatefulWidget {
     this.errorMessage = 'ERROR',
     this.enableAttachments = true,
     this.enableVoiceNotes = true,
+    this.onUserPromptChanged,
+    this.onSetInputText,
     super.key,
   }) : viewModel = ChatViewModel(
          provider: provider,
@@ -112,6 +114,17 @@ class LlmChatView extends StatefulWidget {
   /// When set to false, the voice recording button and related functionality
   /// will be disabled.
   final bool enableVoiceNotes;
+
+  /// Optional callback function triggered when the user's prompt text changes.
+  ///
+  /// This allows parent widgets to track changes to the prompt text as the user types.
+  final void Function(String promptText)? onUserPromptChanged;
+
+  /// Optional callback to get a reference to the ChatInput's setInputText method.
+  ///
+  /// This allows parent widgets to programmatically set the input text,
+  /// which is useful for restoring draft messages from storage.
+  final void Function(void Function(String) setInputTextFn)? onSetInputText;
 
   /// The view model containing the chat state and configuration.
   ///
@@ -215,6 +228,8 @@ class _LlmChatViewState extends State<LlmChatView>
                       onTranslateStt: _onTranslateStt,
                       onCancelStt:
                           _pendingSttResponse == null ? null : _onCancelStt,
+                      onUserPromptChanged: widget.onUserPromptChanged,
+                      onSetInputText: widget.onSetInputText,
                     ),
                   ],
                 ),

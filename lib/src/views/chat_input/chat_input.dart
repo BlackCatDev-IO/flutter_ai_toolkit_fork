@@ -33,6 +33,9 @@ class ChatInput extends StatefulWidget {
   ///
   /// [initialMessage] can be provided to pre-populate the input field.
   ///
+  /// [onSetInputText] can be provided to get a reference to the setInputText
+  /// method, which allows programmatically setting the input text.
+  ///
   /// [onCancelMessage] and [onCancelStt] are optional callbacks for cancelling
   /// message submission or speech-to-text translation respectively.
   const ChatInput({
@@ -43,6 +46,8 @@ class ChatInput extends StatefulWidget {
     this.onCancelMessage,
     this.onCancelStt,
     this.autofocus = true,
+    this.onUserPromptChanged,
+    this.onSetInputText,
     super.key,
   }) : assert(
          !(onCancelMessage != null && onCancelStt != null),
@@ -83,6 +88,17 @@ class ChatInput extends StatefulWidget {
   /// Whether the input should automatically focus
   final bool autofocus;
 
+  /// Optional callback function triggered when the user's prompt text changes.
+  ///
+  /// This allows parent widgets to track changes to the prompt text as the user types.
+  final void Function(String promptText)? onUserPromptChanged;
+
+  /// Optional callback to get a reference to the setInputText method.
+  ///
+  /// This allows parent widgets to set the input text programmatically,
+  /// which is useful for restoring draft messages from storage.
+  final void Function(void Function(String) setInputTextFn)? onSetInputText;
+
   @override
   State<ChatInput> createState() => _ChatInputState();
 }
@@ -111,6 +127,16 @@ class _ChatInputState extends State<ChatInput> {
   //   submit/cancel button is because  clicking on another widget when the
   //   TextField is focused causes it to lose focus (as it should)
   final _focusNode = FocusNode();
+
+  /// Sets the input text programmatically
+  ///
+  /// This allows parent widgets to set the content of the text field directly,
+  /// which is useful for restoring draft messages.
+  void setInputText(String text) {
+    if (_textController.text != text) {
+      _textController.text = text;
+    }
+  }
 
   final _textController = TextEditingController();
   final _waveController = WaveformRecorderController();
@@ -141,7 +167,26 @@ class _ChatInputState extends State<ChatInput> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // Listen for text changes to provide updates through onUserPromptChanged
+    _textController.addListener(_onTextChanged);
+
+    // Provide setInputText reference to parent if callback is provided
+    if (widget.onSetInputText != null) {
+      widget.onSetInputText!(setInputText);
+    }
+  }
+
+  void _onTextChanged() {
+    if (widget.onUserPromptChanged != null) {
+      widget.onUserPromptChanged!(_textController.text);
+    }
+  }
+
+  @override
   void dispose() {
+    _textController.removeListener(_onTextChanged);
     _textController.dispose();
     _waveController.dispose();
     _focusNode.dispose();
