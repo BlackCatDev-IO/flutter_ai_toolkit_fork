@@ -89,6 +89,7 @@ class LlmChatView extends StatefulWidget {
     this.errorMessage = 'ERROR',
     this.enableAttachments = true,
     this.enableVoiceNotes = true,
+    this.textController,
     super.key,
   }) : viewModel = ChatViewModel(
          provider: provider,
@@ -112,6 +113,13 @@ class LlmChatView extends StatefulWidget {
   /// When set to false, the voice recording button and related functionality
   /// will be disabled.
   final bool enableVoiceNotes;
+
+  /// Optional TextEditingController to control the input text field.
+  ///
+  /// If provided, this controller will be used for the chat input field.
+  /// This allows parent widgets to directly access and modify the input text,
+  /// which is useful for features like draft message persistence.
+  final TextEditingController? textController;
 
   /// The view model containing the chat state and configuration.
   ///
@@ -215,6 +223,7 @@ class _LlmChatViewState extends State<LlmChatView>
                       onTranslateStt: _onTranslateStt,
                       onCancelStt:
                           _pendingSttResponse == null ? null : _onCancelStt,
+                      textController: widget.textController,
                     ),
                   ],
                 ),

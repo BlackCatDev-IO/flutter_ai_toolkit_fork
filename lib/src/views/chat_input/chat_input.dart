@@ -33,6 +33,8 @@ class ChatInput extends StatefulWidget {
   ///
   /// [initialMessage] can be provided to pre-populate the input field.
   ///
+  /// [textController] can be provided to control the input text field.
+  ///
   /// [onCancelMessage] and [onCancelStt] are optional callbacks for cancelling
   /// message submission or speech-to-text translation respectively.
   const ChatInput({
@@ -43,6 +45,7 @@ class ChatInput extends StatefulWidget {
     this.onCancelMessage,
     this.onCancelStt,
     this.autofocus = true,
+    this.textController,
     super.key,
   }) : assert(
          !(onCancelMessage != null && onCancelStt != null),
@@ -83,6 +86,13 @@ class ChatInput extends StatefulWidget {
   /// Whether the input should automatically focus
   final bool autofocus;
 
+  /// Optional TextEditingController to control the input text field.
+  ///
+  /// If provided, this controller will be used for the chat input field instead of
+  /// creating a new one internally. This allows parent widgets to directly access
+  /// and modify the input text, which is useful for features like draft message persistence.
+  final TextEditingController? textController;
+
   @override
   State<ChatInput> createState() => _ChatInputState();
 }
@@ -112,7 +122,7 @@ class _ChatInputState extends State<ChatInput> {
   //   TextField is focused causes it to lose focus (as it should)
   final _focusNode = FocusNode();
 
-  final _textController = TextEditingController();
+  late final TextEditingController _textController;
   final _waveController = WaveformRecorderController();
   final _attachments = <Attachment>[];
   static const _minInputHeight = 48.0;
@@ -141,8 +151,18 @@ class _ChatInputState extends State<ChatInput> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _textController = widget.textController ?? TextEditingController();
+  }
+
+  @override
   void dispose() {
-    _textController.dispose();
+    // Only dispose the controller if created internally. Otherwise, the parent
+    // widget is responsible for disposing of it.
+    if (widget.textController == null) {
+      _textController.dispose();
+    }
     _waveController.dispose();
     _focusNode.dispose();
     super.dispose();
