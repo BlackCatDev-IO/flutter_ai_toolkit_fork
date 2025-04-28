@@ -42,6 +42,7 @@ class ChatInput extends StatefulWidget {
     this.onCancelStt,
     this.autofocus = true,
     this.textController,
+    this.prefixIcon,
     super.key,
   }) : assert(
          !(onCancelMessage != null && onCancelStt != null),
@@ -88,6 +89,9 @@ class ChatInput extends StatefulWidget {
   /// creating a new one internally. This allows parent widgets to directly access
   /// and modify the input text, which is useful for features like draft message persistence.
   final TextEditingController? textController;
+
+  /// Optional widget to display inside the textfield in on the left.
+  final Widget? prefixIcon;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -182,7 +186,12 @@ class _ChatInputState extends State<ChatInput> {
                     (context, child) => Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        if (_viewModel!.enableAttachments)
+                        // Only show attachment action bar outside the text field if
+                        // showAsPrefix is false
+                        if (_viewModel!.enableAttachments &&
+                            widget.prefixIcon == null &&
+                            !(_chatStyle?.addButtonStyle?.showAsPrefix ??
+                                false))
                           Padding(
                             padding: const EdgeInsets.only(bottom: 14),
                             child: AttachmentActionBar(
@@ -201,6 +210,17 @@ class _ChatInputState extends State<ChatInput> {
                             autofocus: widget.autofocus,
                             inputState: _inputState,
                             cancelButtonStyle: _chatStyle!.cancelButtonStyle!,
+                            // Create prefix icon from addButtonStyle when showAsPrefix is true
+                            prefixIcon:
+                                (_viewModel!.enableAttachments &&
+                                        (_chatStyle
+                                                ?.addButtonStyle
+                                                ?.showAsPrefix ??
+                                            false)
+                                    ? AttachmentActionBar(
+                                      onAttachments: onAttachments,
+                                    )
+                                    : null),
                           ),
                         ),
                         Padding(

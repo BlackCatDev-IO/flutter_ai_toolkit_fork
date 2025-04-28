@@ -32,6 +32,7 @@ class ChatTextField extends StatelessWidget {
     required this.hintText,
     required this.hintStyle,
     required this.hintPadding,
+    this.prefixIcon,
     super.key,
   });
 
@@ -68,6 +69,9 @@ class ChatTextField extends StatelessWidget {
   /// Called when the user submits editable content.
   final void Function(String text) onSubmitted;
 
+  /// An optional widget to display before the text input field.
+  final Widget? prefixIcon;
+
   @override
   Widget build(BuildContext context) =>
       isCupertinoApp(context)
@@ -101,6 +105,7 @@ class ChatTextField extends StatelessWidget {
               hintText: hintText,
               hintStyle: hintStyle,
               contentPadding: hintPadding,
+              prefixIcon: prefixIcon,
             ),
           );
 }

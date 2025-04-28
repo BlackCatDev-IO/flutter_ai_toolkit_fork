@@ -19,6 +19,8 @@ class ActionButtonStyle {
     this.iconDecoration,
     this.text,
     this.textStyle,
+    this.customIcon,
+    this.showAsPrefix = false,
   });
 
   /// Resolves the provided [style] with the [defaultStyle].
@@ -39,6 +41,8 @@ class ActionButtonStyle {
     iconDecoration: style?.iconDecoration ?? defaultStyle.iconDecoration,
     text: style?.text ?? defaultStyle.text,
     textStyle: style?.textStyle ?? defaultStyle.textStyle,
+    customIcon: style?.customIcon ?? defaultStyle.customIcon,
+    showAsPrefix: style?.showAsPrefix ?? defaultStyle.showAsPrefix,
   );
 
   /// Provides default style for icon buttons.
@@ -141,4 +145,19 @@ class ActionButtonStyle {
 
   /// The text style of the tooltip.
   final TextStyle? textStyle;
+
+  /// A custom widget to use instead of the icon.
+  ///
+  /// If provided, this will be used instead of the icon. This allows for more
+  /// complex custom buttons beyond what can be achieved with IconData alone.
+  final Widget? customIcon;
+
+  /// Determines if this action button should be displayed as a prefix icon inside the text field.
+  ///
+  /// Controls the positioning of the attachment button (add button).
+  ///
+  /// When set to true, the attachment button will appear inside the text field as a
+  /// prefix icon. When false, it will appear outside the text field beside it.
+  /// Only applies to the attachment button (add button).
+  final bool showAsPrefix;
 }

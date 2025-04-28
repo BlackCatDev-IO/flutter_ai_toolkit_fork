@@ -40,22 +40,28 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     onTap: onPressed,
     child: Container(
-      width: size,
-      height: size,
-      decoration: style.iconDecoration,
-      // tooltips aren't a thing in cupertino, so skip it
+      width: style.customIcon == null ? size : null,
+      height: style.customIcon == null ? size : null,
+      decoration: style.customIcon == null ? style.iconDecoration : null,
+      // If customIcon is provided, use it directly
       child:
-          isCupertinoApp(context)
-              ? Icon(style.icon, color: style.iconColor, size: size * 0.6)
-              : Tooltip(
+          style.customIcon != null
+              ? Tooltip(
                 message: style.text,
                 textStyle: style.textStyle,
-                child: Icon(
-                  style.icon,
-                  color: style.iconColor,
-                  size: size * 0.6,
-                ),
-              ),
+                child: style.customIcon,
+              )
+              : (isCupertinoApp(context)
+                  ? Icon(style.icon, color: style.iconColor, size: size * 0.6)
+                  : Tooltip(
+                    message: style.text,
+                    textStyle: style.textStyle,
+                    child: Icon(
+                      style.icon,
+                      color: style.iconColor,
+                      size: size * 0.6,
+                    ),
+                  )),
     ),
   );
 }
