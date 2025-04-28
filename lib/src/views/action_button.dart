@@ -40,28 +40,40 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     onTap: onPressed,
     child: Container(
-      width: style.customIcon == null ? size : null,
-      height: style.customIcon == null ? size : null,
-      decoration: style.customIcon == null ? style.iconDecoration : null,
-      // If customIcon is provided, use it directly
-      child:
-          style.customIcon != null
-              ? Tooltip(
-                message: style.text,
-                textStyle: style.textStyle,
-                child: style.customIcon,
-              )
-              : (isCupertinoApp(context)
-                  ? Icon(style.icon, color: style.iconColor, size: size * 0.6)
-                  : Tooltip(
-                    message: style.text,
-                    textStyle: style.textStyle,
-                    child: Icon(
-                      style.icon,
-                      color: style.iconColor,
-                      size: size * 0.6,
-                    ),
-                  )),
+      width: _hasCustomIcon ? null : size,
+      height: _hasCustomIcon ? null : size,
+      decoration: _hasCustomIcon ? null : style.iconDecoration,
+      // If any custom icon is provided, use it directly
+      child: _getButtonContent(context),
     ),
   );
+
+  bool get _hasCustomIcon =>
+      style.customAttachmentsIcon != null || style.customSubmitIcon != null;
+
+  Widget _getButtonContent(BuildContext context) {
+    if (style.customAttachmentsIcon != null) {
+      return Tooltip(
+        message: style.text,
+        textStyle: style.textStyle,
+        child: style.customAttachmentsIcon,
+      );
+    }
+
+    if (style.customSubmitIcon != null) {
+      return Tooltip(
+        message: style.text,
+        textStyle: style.textStyle,
+        child: style.customSubmitIcon,
+      );
+    }
+
+    return isCupertinoApp(context)
+        ? Icon(style.icon, color: style.iconColor, size: size * 0.6)
+        : Tooltip(
+          message: style.text,
+          textStyle: style.textStyle,
+          child: Icon(style.icon, color: style.iconColor, size: size * 0.6),
+        );
+  }
 }

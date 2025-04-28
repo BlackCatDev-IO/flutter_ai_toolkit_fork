@@ -19,15 +19,15 @@ class ActionButtonStyle {
     this.iconDecoration,
     this.text,
     this.textStyle,
-    this.customIcon,
+    this.customAttachmentsIcon,
+    this.customSubmitIcon,
     this.showAsPrefix = false,
   });
 
   /// Resolves the provided [style] with the [defaultStyle].
   ///
-  /// This method returns a new [ActionButtonStyle] instance where each property
-  /// is taken from the provided [style] if it is not null, otherwise from the
-  /// [defaultStyle].
+  /// This method will use the properties from the [style] if they are not null,
+  /// and fall back to the [defaultStyle] properties otherwise.
   ///
   /// - [style]: The style to resolve. If null, the [defaultStyle] will be used.
   /// - [defaultStyle]: The default style to use for any properties not provided
@@ -41,7 +41,10 @@ class ActionButtonStyle {
     iconDecoration: style?.iconDecoration ?? defaultStyle.iconDecoration,
     text: style?.text ?? defaultStyle.text,
     textStyle: style?.textStyle ?? defaultStyle.textStyle,
-    customIcon: style?.customIcon ?? defaultStyle.customIcon,
+    customAttachmentsIcon:
+        style?.customAttachmentsIcon ?? defaultStyle.customAttachmentsIcon,
+    customSubmitIcon:
+        style?.customSubmitIcon ?? defaultStyle.customSubmitIcon,
     showAsPrefix: style?.showAsPrefix ?? defaultStyle.showAsPrefix,
   );
 
@@ -146,11 +149,15 @@ class ActionButtonStyle {
   /// The text style of the tooltip.
   final TextStyle? textStyle;
 
-  /// A custom widget to use instead of the icon.
+  /// A custom widget to use instead of the icon for attachment buttons.
   ///
-  /// If provided, this will be used instead of the icon. This allows for more
-  /// complex custom buttons beyond what can be achieved with IconData alone.
-  final Widget? customIcon;
+  /// If provided, this will be used instead of the icon for attachment buttons.
+  final Widget? customAttachmentsIcon;
+  
+  /// A custom widget to use instead of the icon for submit buttons.
+  ///
+  /// If provided, this will be used instead of the icon for submit buttons.
+  final Widget? customSubmitIcon;
 
   /// Determines if this action button should be displayed as a prefix icon inside the text field.
   ///
