@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
+import '../../styles/action_button_style.dart';
+import '../../styles/action_button_type.dart';
 import '../../styles/llm_chat_view_style.dart';
 import '../action_button.dart';
-import '../adaptive_progress_indicator.dart';
 import 'input_state.dart';
 
 /// A button widget that adapts its appearance and behavior based on the current
@@ -50,30 +51,63 @@ class InputButton extends StatelessWidget {
   /// Callback function when stopping audio recording.
   final void Function() onStopRecording;
 
+  ActionButtonType? _getButtonTypeForState(InputState state) {
+    return switch (state) {
+      InputState.canSubmitPrompt => ActionButtonType.submit,
+      InputState.canCancelPrompt => ActionButtonType.stop,
+      InputState.canStt => ActionButtonType.record,
+      InputState.isRecording => ActionButtonType.stop,
+      InputState.canCancelStt => null,
+      InputState.disabled => ActionButtonType.disabled,
+    };
+  }
+
+  VoidCallback _getCallbackForState(InputState state) {
+    return switch (state) {
+      InputState.canSubmitPrompt => onSubmitPrompt,
+      InputState.canCancelPrompt => onCancelPrompt,
+      InputState.canStt => onStartRecording,
+      InputState.isRecording => onStopRecording,
+      InputState.canCancelStt => () {}, // Progress indicator has no callback
+      InputState.disabled => () {}, // Disabled state has no callback
+    };
+  }
+
   @override
-  Widget build(BuildContext context) => switch (inputState) {
-    InputState.canSubmitPrompt => ActionButton(
-      style: chatStyle.submitButtonStyle!,
-      onPressed: onSubmitPrompt,
-    ),
-    InputState.canCancelPrompt => ActionButton(
-      style: chatStyle.stopButtonStyle!,
-      onPressed: onCancelPrompt,
-    ),
-    InputState.canStt => ActionButton(
-      style: chatStyle.recordButtonStyle!,
-      onPressed: onStartRecording,
-    ),
-    InputState.isRecording => ActionButton(
-      style: chatStyle.stopButtonStyle!,
-      onPressed: onStopRecording,
-    ),
-    InputState.canCancelStt => AdaptiveCircularProgressIndicator(
-      color: chatStyle.progressIndicatorColor!,
-    ),
-    InputState.disabled => ActionButton(
-      style: chatStyle.disabledButtonStyle!,
-      onPressed: () {},
-    ),
-  };
+  Widget build(BuildContext context) {
+    final style = switch (inputState) {
+      InputState.canSubmitPrompt => chatStyle.submitButtonStyle!,
+      InputState.canCancelPrompt => chatStyle.stopButtonStyle!,
+      InputState.canStt => chatStyle.recordButtonStyle!,
+      InputState.isRecording => chatStyle.stopButtonStyle!,
+      InputState.canCancelStt => null, // This state uses a progress indicator
+      InputState.disabled => chatStyle.disabledButtonStyle!,
+    };
+
+    // Speech to text loading
+    if (style == null) {
+      return CircularProgressIndicator(
+        color: chatStyle.progressIndicatorColor!,
+      );
+    }
+
+    final buttonType = _getButtonTypeForState(inputState);
+    final callback = _getCallbackForState(inputState);
+
+    // If we have a valid button type and a custom icon is provided for this button type in the customIcons map, use it
+    if (buttonType != null && style.customIcons.containsKey(buttonType)) {
+      final customStyle = ActionButtonStyle(
+        iconColor: style.iconColor,
+        iconDecoration: style.iconDecoration,
+        text: style.text,
+        textStyle: style.textStyle,
+        customIcons: {buttonType: style.customIcons[buttonType]!},
+      );
+
+      return ActionButton(style: customStyle, onPressed: callback);
+    }
+
+    // Fall back to the standard ActionButton with default icon
+    return ActionButton(style: style, onPressed: callback);
+  }
 }

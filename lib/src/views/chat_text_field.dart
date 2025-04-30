@@ -33,6 +33,7 @@ class ChatTextField extends StatelessWidget {
     required this.hintStyle,
     required this.hintPadding,
     this.prefixIcon,
+    this.suffixIcon,
     super.key,
   });
 
@@ -72,6 +73,9 @@ class ChatTextField extends StatelessWidget {
   /// An optional widget to display before the text input field.
   final Widget? prefixIcon;
 
+  /// An optional widget to display after the text input field.
+  final Widget? suffixIcon;
+
   @override
   Widget build(BuildContext context) =>
       isCupertinoApp(context)
@@ -106,6 +110,7 @@ class ChatTextField extends StatelessWidget {
               hintStyle: hintStyle,
               contentPadding: hintPadding,
               prefixIcon: prefixIcon,
+              suffixIcon: suffixIcon,
             ),
           );
 }

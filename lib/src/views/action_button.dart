@@ -48,23 +48,16 @@ class ActionButton extends StatelessWidget {
     ),
   );
 
-  bool get _hasCustomIcon =>
-      style.customAttachmentsIcon != null || style.customSubmitIcon != null;
+  bool get _hasCustomIcon => style.customIcons.isNotEmpty;
 
   Widget _getButtonContent(BuildContext context) {
-    if (style.customAttachmentsIcon != null) {
+    if (_hasCustomIcon) {
+      // InputButton passes only one icon in the map
+      final iconWidget = style.customIcons.values.first;
       return Tooltip(
         message: style.text,
         textStyle: style.textStyle,
-        child: style.customAttachmentsIcon,
-      );
-    }
-
-    if (style.customSubmitIcon != null) {
-      return Tooltip(
-        message: style.text,
-        textStyle: style.textStyle,
-        child: style.customSubmitIcon,
+        child: iconWidget,
       );
     }
 

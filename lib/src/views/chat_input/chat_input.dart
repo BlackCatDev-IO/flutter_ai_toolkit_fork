@@ -221,19 +221,38 @@ class _ChatInputState extends State<ChatInput> {
                                       onAttachments: onAttachments,
                                     )
                                     : null),
+                            // Create suffix icon from submitButtonStyle when showAsSuffix is true
+                            suffixIcon:
+                                (_chatStyle?.submitButtonStyle?.showAsSuffix ??
+                                        false)
+                                    ? Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: InputButton(
+                                        inputState: _inputState,
+                                        chatStyle: _chatStyle!,
+                                        onSubmitPrompt: onSubmitPrompt,
+                                        onCancelPrompt: onCancelPrompt,
+                                        onStartRecording: onStartRecording,
+                                        onStopRecording: onStopRecording,
+                                      ),
+                                    )
+                                    : null,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: InputButton(
-                            inputState: _inputState,
-                            chatStyle: _chatStyle!,
-                            onSubmitPrompt: onSubmitPrompt,
-                            onCancelPrompt: onCancelPrompt,
-                            onStartRecording: onStartRecording,
-                            onStopRecording: onStopRecording,
+                        // Only show submit button outside if showAsSuffix is false
+                        if (!(_chatStyle?.submitButtonStyle?.showAsSuffix ??
+                            false))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: InputButton(
+                              inputState: _inputState,
+                              chatStyle: _chatStyle!,
+                              onSubmitPrompt: onSubmitPrompt,
+                              onCancelPrompt: onCancelPrompt,
+                              onStartRecording: onStartRecording,
+                              onStopRecording: onStopRecording,
+                            ),
                           ),
-                        ),
                       ],
                     ),
               ),

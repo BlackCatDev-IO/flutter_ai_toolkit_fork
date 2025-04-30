@@ -19,9 +19,9 @@ class ActionButtonStyle {
     this.iconDecoration,
     this.text,
     this.textStyle,
-    this.customAttachmentsIcon,
-    this.customSubmitIcon,
     this.showAsPrefix = false,
+    this.showAsSuffix = false,
+    this.customIcons = const {},
   });
 
   /// Resolves the provided [style] with the [defaultStyle].
@@ -32,7 +32,7 @@ class ActionButtonStyle {
   /// - [style]: The style to resolve. If null, the [defaultStyle] will be used.
   /// - [defaultStyle]: The default style to use for any properties not provided
   ///   by the [style].
-  factory ActionButtonStyle.resolve(
+  static ActionButtonStyle resolve(
     ActionButtonStyle? style, {
     required ActionButtonStyle defaultStyle,
   }) => ActionButtonStyle(
@@ -41,11 +41,9 @@ class ActionButtonStyle {
     iconDecoration: style?.iconDecoration ?? defaultStyle.iconDecoration,
     text: style?.text ?? defaultStyle.text,
     textStyle: style?.textStyle ?? defaultStyle.textStyle,
-    customAttachmentsIcon:
-        style?.customAttachmentsIcon ?? defaultStyle.customAttachmentsIcon,
-    customSubmitIcon:
-        style?.customSubmitIcon ?? defaultStyle.customSubmitIcon,
     showAsPrefix: style?.showAsPrefix ?? defaultStyle.showAsPrefix,
+    showAsSuffix: style?.showAsSuffix ?? defaultStyle.showAsSuffix,
+    customIcons: style?.customIcons ?? defaultStyle.customIcons,
   );
 
   /// Provides default style for icon buttons.
@@ -149,16 +147,6 @@ class ActionButtonStyle {
   /// The text style of the tooltip.
   final TextStyle? textStyle;
 
-  /// A custom widget to use instead of the icon for attachment buttons.
-  ///
-  /// If provided, this will be used instead of the icon for attachment buttons.
-  final Widget? customAttachmentsIcon;
-  
-  /// A custom widget to use instead of the icon for submit buttons.
-  ///
-  /// If provided, this will be used instead of the icon for submit buttons.
-  final Widget? customSubmitIcon;
-
   /// Determines if this action button should be displayed as a prefix icon inside the text field.
   ///
   /// Controls the positioning of the attachment button (add button).
@@ -167,4 +155,26 @@ class ActionButtonStyle {
   /// prefix icon. When false, it will appear outside the text field beside it.
   /// Only applies to the attachment button (add button).
   final bool showAsPrefix;
+
+  /// Determines if this action button should be displayed as a suffix icon inside the text field.
+  ///
+  /// Controls the positioning of the submit button.
+  ///
+  /// When set to true, the submit button will appear inside the text field as a
+  /// suffix icon. When false, it will appear outside the text field beside it.
+  /// Only applies to the submit button.
+  final bool showAsSuffix;
+
+  /// A map of custom widgets to be used for specific button types.
+  ///
+  /// When a custom widget is provided for a specific ActionButtonType, it will be used instead of the default icon.
+  ///
+  /// Example:
+  /// ```dart
+  /// customIcons: {
+  ///   ActionButtonType.submit: CustomSubmitButton(),
+  ///   ActionButtonType.record: CustomRecordButton(),
+  /// }
+  /// ```
+  final Map<ActionButtonType, Widget> customIcons;
 }

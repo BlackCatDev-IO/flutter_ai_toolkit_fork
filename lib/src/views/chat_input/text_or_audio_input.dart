@@ -22,6 +22,7 @@ class TextOrAudioInput extends StatelessWidget {
     required this.inputState,
     required this.cancelButtonStyle,
     this.prefixIcon,
+    this.suffixIcon,
   });
 
   final ChatInputStyle inputStyle;
@@ -35,6 +36,7 @@ class TextOrAudioInput extends StatelessWidget {
   final InputState inputState;
   final ActionButtonStyle cancelButtonStyle;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   static const _minInputHeight = 48.0;
   static const _maxInputHeight = 144.0;
 
@@ -84,6 +86,7 @@ class TextOrAudioInput extends StatelessWidget {
                         vertical: 8,
                       ),
                       prefixIcon: prefixIcon,
+                      suffixIcon: suffixIcon,
                     ),
           ),
         ),
