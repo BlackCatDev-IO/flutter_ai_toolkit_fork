@@ -111,6 +111,10 @@ class ChatTextField extends StatelessWidget {
               contentPadding: hintPadding,
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
+              prefixIconConstraints: const BoxConstraints(
+                maxWidth: 40,
+                maxHeight: 40,
+              ),
             ),
           );
 }
