@@ -4,7 +4,13 @@
 
 import 'package:flutter/cupertino.dart' show CupertinoTextField;
 import 'package:flutter/material.dart'
-    show InputBorder, InputDecoration, TextField, TextInputAction;
+    show
+        Colors,
+        InputBorder,
+        InputDecoration,
+        OutlineInputBorder,
+        TextField,
+        TextInputAction;
 import 'package:flutter/widgets.dart';
 
 import '../styles/toolkit_colors.dart';
@@ -114,6 +120,18 @@ class ChatTextField extends StatelessWidget {
               prefixIconConstraints: const BoxConstraints(
                 maxWidth: 40,
                 maxHeight: 40,
+              ),
+              fillColor: Colors.transparent,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1,
+                  color: const Color.fromARGB(255, 110, 110, 110),
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
             ),
           );
