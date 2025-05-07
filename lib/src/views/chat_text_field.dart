@@ -40,6 +40,7 @@ class ChatTextField extends StatelessWidget {
     required this.hintPadding,
     this.prefixIcon,
     this.suffixIcon,
+    this.modelSelectorWidget,
     super.key,
   });
 
@@ -57,6 +58,9 @@ class ChatTextField extends StatelessWidget {
 
   /// The type of action button to use for the keyboard.
   final TextInputAction textInputAction;
+
+  /// Optional widget to display above the text field (for model selection).
+  final Widget? modelSelectorWidget;
 
   /// Controls the text being edited.
   final TextEditingController controller;

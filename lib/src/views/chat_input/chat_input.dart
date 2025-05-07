@@ -43,6 +43,7 @@ class ChatInput extends StatefulWidget {
     this.autofocus = true,
     this.textController,
     this.prefixIcon,
+    this.modelSelectorWidget,
     super.key,
   }) : assert(
          !(onCancelMessage != null && onCancelStt != null),
@@ -92,6 +93,9 @@ class ChatInput extends StatefulWidget {
 
   /// Optional widget to display inside the textfield in on the left.
   final Widget? prefixIcon;
+
+  /// Widget to display above the text input (for model selection).
+  final Widget? modelSelectorWidget;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -210,6 +214,7 @@ class _ChatInputState extends State<ChatInput> {
                             autofocus: widget.autofocus,
                             inputState: _inputState,
                             cancelButtonStyle: _chatStyle!.cancelButtonStyle!,
+                            modelSelectorWidget: widget.modelSelectorWidget,
                             // Create prefix icon from addButtonStyle when showAsPrefix is true
                             prefixIcon:
                                 (_viewModel!.enableAttachments &&

@@ -23,6 +23,7 @@ class TextOrAudioInput extends StatelessWidget {
     required this.cancelButtonStyle,
     this.prefixIcon,
     this.suffixIcon,
+    this.modelSelectorWidget,
   });
 
   final ChatInputStyle inputStyle;
@@ -37,59 +38,67 @@ class TextOrAudioInput extends StatelessWidget {
   final ActionButtonStyle cancelButtonStyle;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Widget? modelSelectorWidget;
   static const _minInputHeight = 48.0;
   static const _maxInputHeight = 144.0;
 
   @override
   Widget build(BuildContext context) => Stack(
     children: [
-      Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: onCancelEdit != null ? 24 : 8,
-          bottom: 8,
-        ),
-        child: DecoratedBox(
-          decoration: inputStyle.decoration!,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: _minInputHeight,
-              maxHeight: _maxInputHeight,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (modelSelectorWidget != null) modelSelectorWidget!,
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: onCancelEdit != null ? 24 : 8,
+              bottom: 8,
             ),
-            child:
-                waveController.isRecording
-                    ? WaveformRecorder(
-                      controller: waveController,
-                      height: _minInputHeight,
-                      onRecordingStopped: onRecordingStopped,
-                    )
-                    : ChatTextField(
-                      minLines: 1,
-                      maxLines: 1024,
-                      controller: textController,
-                      autofocus: autofocus,
-                      focusNode: focusNode,
-                      textInputAction:
-                          isMobile
-                              ? TextInputAction.newline
-                              : TextInputAction.done,
-                      onSubmitted:
-                          inputState == InputState.canSubmitPrompt
-                              ? (_) => onSubmitPrompt()
-                              : (_) => focusNode.requestFocus(),
-                      style: inputStyle.textStyle!,
-                      hintText: inputStyle.hintText!,
-                      hintStyle: inputStyle.hintStyle!,
-                      hintPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      prefixIcon: prefixIcon,
-                      suffixIcon: suffixIcon,
-                    ),
+            child: DecoratedBox(
+              decoration: inputStyle.decoration!,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: _minInputHeight,
+                  maxHeight: _maxInputHeight,
+                ),
+                child:
+                    waveController.isRecording
+                        ? WaveformRecorder(
+                          controller: waveController,
+                          height: _minInputHeight,
+                          onRecordingStopped: onRecordingStopped,
+                        )
+                        : ChatTextField(
+                          minLines: 1,
+                          maxLines: 1024,
+                          controller: textController,
+                          autofocus: autofocus,
+                          focusNode: focusNode,
+                          textInputAction:
+                              isMobile
+                                  ? TextInputAction.newline
+                                  : TextInputAction.done,
+                          onSubmitted:
+                              inputState == InputState.canSubmitPrompt
+                                  ? (_) => onSubmitPrompt()
+                                  : (_) => focusNode.requestFocus(),
+                          style: inputStyle.textStyle!,
+                          hintText: inputStyle.hintText!,
+                          hintStyle: inputStyle.hintStyle!,
+                          hintPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          prefixIcon: prefixIcon,
+                          suffixIcon: suffixIcon,
+                        ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       Align(
         alignment: Alignment.topRight,

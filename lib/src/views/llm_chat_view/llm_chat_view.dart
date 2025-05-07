@@ -76,6 +76,7 @@ class LlmChatView extends StatefulWidget {
   ///   during a chat operation. Defaults to 'ERROR'.
   /// - [enableAttachments]: Optional. Whether to enable file and image attachments in the chat input.
   /// - [enableVoiceNotes]: Optional. Whether to enable voice notes in the chat input.
+  /// - [modelSelectorWidget]: Optional. A widget to display above the text input field (for model selection).
   LlmChatView({
     required LlmProvider provider,
     LlmChatViewStyle? style,
@@ -90,6 +91,7 @@ class LlmChatView extends StatefulWidget {
     this.enableAttachments = true,
     this.enableVoiceNotes = true,
     this.textController,
+    this.modelSelectorWidget,
     super.key,
   }) : viewModel = ChatViewModel(
          provider: provider,
@@ -118,8 +120,11 @@ class LlmChatView extends StatefulWidget {
   ///
   /// If provided, this controller will be used for the chat input field.
   /// This allows parent widgets to directly access and modify the input text,
-  /// which is useful for features like draft message persistence.
+  /// The text controller for the chat input.  If not provided, a new one will be created.
   final TextEditingController? textController;
+
+  /// A widget to display above the text input field (typically for model selection).
+  final Widget? modelSelectorWidget;
 
   /// The view model containing the chat state and configuration.
   ///
@@ -224,6 +229,7 @@ class _LlmChatViewState extends State<LlmChatView>
                       onCancelStt:
                           _pendingSttResponse == null ? null : _onCancelStt,
                       textController: widget.textController,
+                      modelSelectorWidget: widget.modelSelectorWidget,
                     ),
                   ],
                 ),
